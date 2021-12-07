@@ -39,9 +39,12 @@ the communtication between the Backend, DBMS and Timeslot handler are made possi
 
 ### Backend
 
-### DBMS
-
 ### Timeslot Handler
+
+### DBMS
+The DBMS connects to the cluster OralFixation on the cloud using mongodb and mongoose for declaration of schemas. 
+It currently uses mqtt locally for communication with the Timeslot Handler and to receive the timeslots to insert in the database.
+
 
 Regarding the database, the structure and relations of the tables can be seen below.
 
