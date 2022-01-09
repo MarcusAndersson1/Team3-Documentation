@@ -7,7 +7,7 @@ A service that allows residents of Gothenburg to book dentist appointments
 * [Introduction](#introduction)
   * [How to install](#how-to-intstall)
 * [Technologies and Overview](#technologies-and-overview)
-* [Reqierments and Drivers](#reqierments-and-drivers)
+* [Requirements and Drivers](#requirements-and-drivers)
 * [Versions](#versions)
 * [Roles](#roles)
 
@@ -40,6 +40,11 @@ the communtication between the Backend, DBMS and Timeslot handler are made possi
 ### Backend
 
 ### Timeslot Handler
+The timeslot handler scans through the JSON file from [this link](https://raw.githubusercontent.com/feldob/dit355_2020/master/dentists.json) and publishes each dentist clinic as a its own JSON object to the database. The timeslot handler also grabs the opening hours for each day of the week, and creates 30 minute increments out of them, a timeslot. It skips lunchtime (12.00-13.00). Each timeslot is published as well to the database, whereas the database will handle which timeslot belongs to which clinic. 
+The order of publishing goes as follows: clinic is published, then it waits for the response back from the database, then the timeslots are published.
+
+
+
 
 ### DBMS
 The DBMS connects to the cluster OralFixation on the cloud using mongodb and mongoose for declaration of schemas. 
@@ -50,7 +55,7 @@ Regarding the database, the structure and relations of the tables can be seen be
 
 ![Database_diagram](ER-dagram.jpg)
 
-## Requierments and Drivers
+## Requirements and Drivers
 
 Examples of some of the requirements we are/where working by:
 
