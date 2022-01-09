@@ -37,7 +37,9 @@ the communtication between the Backend, DBMS and Timeslot handler are made possi
 
 ### Frontend
 
+
 ### Backend
+The REST api is built with the express framework. It is connected cross domain to the frontend, which means they are running on different ports. The data exchanged between the two components are made possible through HTTP request and responses. Most of the data is contained as a JSON object in the HTTP body, and some as parameters in the URL. Also a cookie is sent in the HTTP header when the /login endpoint is called and the request is successfull. Furthermore the API is connected to our database as described under DBMS, but the backend only handles the user table. MQTT is also used for subscribing and publishing timeslots that we recive from the DBMS. The amount of data sent can be large, so to handle all requests the backend reads a batch of 10 before processing more. The backend uses QoS 2 as it is key functionallity for the system to display the right timeslots, aswell as for the time bookings from the user.
 
 ### Timeslot Handler
 
