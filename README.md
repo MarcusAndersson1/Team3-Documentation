@@ -31,7 +31,12 @@ git clone https://git.chalmers.se/courses/dit355/test-teams-formation/team-3/fro
 
 The project is composed of four entities (as shown below) as a distributed System. Each components have a self-contained separate repository.
 The communication between the components are done with either an Api or through a mqtt broker. The frontend "talks" with the backend through an Api and
-the communtication between the Backend, DBMS and Timeslot handler are made possible with a mqtt broker.
+the communtication between the Backend, DBMS and Timeslot handler are made possible with a mqtt broker. 
+
+### Architecture
+
+Multiple components interact and coordinate operations in order to appear to the end-user as a single coherent system with the database operating in the cloud. This is useful for horizontal scaling, as more computers may be added to the system at any time. If one computer fails, the remainder of the system should still be able to function, resulting in fault-tolerance, except our system only uses two for now.
+To initiate communication between separated services on events, we employ an event-driven design with MQTT publish and subscribe as the initiators. This type of communication complements the distributed system nicely by allowing for interoperability and components that are unaware of one other. We also utilize pipeline architecture to increase the number of instructions that may be processed concurrently. This is accomplished by having one component extract the data, then send it to the next component, which can do certain operations on the data, and the next component validate the data, and so on simultaneous.
 
 ![Component_overview](Component_overview_diagram.png)
 
@@ -42,7 +47,7 @@ The frontend is built with the Vue framework. One of the key features is a map g
 The REST api is built with the express framework. It is connected cross domain to the frontend, which means they are running on different ports. The data exchanged between the two components are made possible through HTTP request and responses. Most of the data is contained as a JSON object in the HTTP body, and some as parameters in the URL. Also a cookie is sent in the HTTP header when the /login endpoint is called and the request is successfull. Furthermore the API is connected to our database as described under DBMS, but the backend only handles the user table. MQTT is also used for subscribing and publishing timeslots that we recive from the DBMS. The amount of data sent can be large, so to handle all requests the backend reads a batch of 10 before processing more. The backend uses QoS 2 as it is key functionallity for the system to display the right timeslots, aswell as for the time bookings from the user.
 
 ### Timeslot Handler
-The timeslot handler scans through the JSON file from [this link](https://raw.githubusercontent.com/feldob/dit355_2020/master/dentists.json) and publishes each dentist clinic as a its own JSON object to the database, via MQTT. The timeslot handler also grabs the opening hours for each day of the week, and creates 30 minute increments out of them, a timeslot. It skips lunchtime (12.00-13.00). Each timeslot is published as well to the database, whereas the database will handle which timeslot belongs to which clinic. 
+The timeslot handler scans through the JSON file from [this link](https://raw.githubusercontent.com/feldob/dit355_2020/master/dentists.json) and publishes each dentist clinic as a its own JSON object to the database, via MQTT. The timeslot handler also grabs the opening hours for each day of the week, and creates 30 minute increments out of them, a timeslot. It skips lunchtime (12.00-13.00). Each timeslot is published as well to the database, whereas the database will handle which timeslot belongs to which clinic.
 The order of publishing goes as follows: clinic is published, then it waits for the response back from the database, then the timeslots are published. It repeats this step until all clinics and their respective timeslots are published.
 
 
@@ -76,11 +81,6 @@ To have a timeslot not showing up, or the booking not going through. That kind o
 ## Versions
 
 For more detailed information, visit each repo and check under tags. There should be a tag for each release.
-
-Version 1 or V1 was finished Dec 1 2021. It contained a simple GUI that was connected to the Backend Api. A first draft of the db tables and a connection to the DBMS.
-Also a way to parse a dentist registry JSON file to usefull information that will be used through out the system.
-
-Version 2 or V2...
 
 ## Roles
 
