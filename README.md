@@ -47,7 +47,12 @@ The frontend is built with the Vue framework. One of the key features is a map g
 ### Backend
 The REST api is built with the express framework. It is connected cross domain to the frontend, which means they are running on different ports. The data exchanged between the two components are made possible through HTTP request and responses. Most of the data is contained as a JSON object in the HTTP body, and some as parameters in the URL. Also a cookie is sent in the HTTP header when the /login endpoint is called and the request is successfull. Furthermore the API is connected to our database as described under DBMS, but the backend only handles the user table. MQTT is also used for subscribing and publishing timeslots that we recive from the DBMS. The amount of data sent can be large, so to handle all requests the backend reads a batch of 10 before processing more. The backend uses QoS 2 as it is key functionallity for the system to display the right timeslots, aswell as for the time bookings from the user.
 
+
+#### QoS
+The system is mostly using a MQTT QoS of 0 for the requests as most requests are not very important that they get through. Bookings however use a QoS of 1 to make sure that they get through and the users in grave need of dentistry will get their teeth fixed. In the diagram below the flow of a booking is shown the communication with the DBMS take place using MQTT which correspond to actions 2,3,6,7a, and 7b there is also two cases for when a request is well formed and not well formed. The diagram also assumes that the user is logged in from the start. Communications with the DBMS imply that it connects with the database unless the database in not active in which case it is covered by case 2.
+
 ![sequence_diagram](sequence.png)
+
 
 ### Timeslot Handler
 The timeslot handler scans through the JSON file from [this link](https://raw.githubusercontent.com/feldob/dit355_2020/master/dentists.json) and publishes each dentist clinic as a its own JSON object to the database, via MQTT. The timeslot handler also grabs the opening hours for each day of the week, and creates 30 minute increments out of them, a timeslot. It skips lunchtime (12.00-13.00). Each timeslot is published as well to the database, whereas the database will handle which timeslot belongs to which clinic.
