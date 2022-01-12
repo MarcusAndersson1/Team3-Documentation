@@ -55,7 +55,7 @@ The system is mostly using a MQTT QoS of 0 for the requests as most requests are
 
 
 ### Timeslot Handler
-The timeslot handler scans through the JSON file from [this link](https://raw.githubusercontent.com/feldob/dit355_2020/master/dentists.json) and publishes each dentist clinic as a its own JSON object to the database, via MQTT. The timeslot handler also grabs the opening hours for each day of the week, and creates 30 minute increments out of them, a timeslot. It skips lunchtime (12.00-13.00). Each timeslot is published as well to the database, whereas the database will handle which timeslot belongs to which clinic.
+The timeslot handler (JSON Parser) scans through the JSON file from [this link](https://raw.githubusercontent.com/feldob/dit355_2020/master/dentists.json) and publishes each dentist clinic as a its own JSON object to the database, via MQTT. The timeslot handler also grabs the opening hours for each day of the week, and creates 30 minute increments out of them, a timeslot. It skips lunchtime (12.00-13.00). Each timeslot is published as well to the database, whereas the database will handle which timeslot belongs to which clinic.
 The order of publishing goes as follows: clinic is published, then it waits for the response back from the database, then the timeslots are published. It repeats this step until all clinics and their respective timeslots are published.
 
 
